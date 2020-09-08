@@ -1,0 +1,31 @@
+1、字符处理是使用gets一行行读入字符串进行处理，目前没发现gets不稳定情况，若出现不稳定再说就改cin.getline，当使用freopen读入文件时可得到处理完文件的输出文件。
+2、使用freopen文件读入和输入：
+（没用过freopen的话这样操作：
+编译运行后
+在cpp文件相同目录下手动建立pascal_test.in，自动生成pascal_to_c.c。）
+3、小细节没处理，因为写吐了：
+（1）注释，缺个处理pascal"{"和"}"括起来的注释函数，
+然后在适当的地方调用即可。问题不大。
+（2）pascal 有函数内嵌套定义函数的操作，c没有，转化过来也不方便，比如：
+procedure quicksort (m,n:integer);
+       var k,v : integer;
+    function partition (y,z :integer):integer;
+       var i,j : integer;
+       begin         
+	…a…；  …v…；
+            exchange(i,j);    
+       end ;
+       begin   
+                   k=partition(m,n);
+                   quicksort(m,k-1);   
+                   quicksort(k+1,n);  
+     end ;
+上面代码中quicksort中嵌套了partition，可是quicksort中有自己本身的局部变量k、v,假设他自己局部变量很多，
+然后partition内又需要使用quicksort内定义的变量，如上面代码中 .....v....., 翻译时需要将partition提到quicksort外
+那v只能在partition中当参数代入了，但一般情况下变量多了总不能把所有都当参数吧。。。。
+于是这部分直接省略没有翻译，（写测试代码时避免这一点即可）因此基本是逐行翻译。
+（3）pascal的布尔型没处理，理由c语言没有布尔型，除非把布尔型转换成int，true=1，false=0，这个处理没写，要写的话也不难，先不写了。
+（4）pascal的数组负数下标没处理，理由c语言数组下标不能为负，for循环如果这样：a）for i:= -5 to 10 do write (x,y);  ，在c语言里可以处理;
+b) for i:= -5 to 10 do write (a[i]);  ，c的代码就RE了; 处理起来太麻烦了，于是这里直接开数组时采用：a[-1..100,50..100]--->a[100][100]的方法了。
+测试代码不要有b）类问题出现就好了。
+（5）暂时没了，自己测了几个样例还都挺正确，有问题再补。
